@@ -76,12 +76,12 @@ export async function POST(request) {
     await dbConnect();
 
     const saved = await Promise.all(
-      leads.map((lead) =>
-        Lead.findOneAndUpdate({ placeId: lead.placeId }, lead, {
-          upsert: true,
-          new: true,
-          setDefaultsOnInsert: true,
-        })
+      leads.map(({ placeId, ...rest }) =>
+        Lead.findOneAndUpdate(
+          { placeId },
+          { $set: rest, $setOnInsert: { source: "Google Maps" } },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        )
       )
     );
 

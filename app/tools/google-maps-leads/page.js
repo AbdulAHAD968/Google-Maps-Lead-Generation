@@ -115,7 +115,7 @@ export default function GoogleMapsLeadsPage() {
   const exportCsv = () => {
     if (!leads.length) return;
     const columns = [
-      "businessName",
+      "company",
       "category",
       "address",
       "city",
@@ -275,7 +275,7 @@ export default function GoogleMapsLeadsPage() {
                   {leads.map((l) => (
                     <Fragment key={l.placeId}>
                       <tr className="border-b border-hairline-soft hover:bg-surface-card/60">
-                        <td className="px-6 py-3 text-ink">{l.businessName}</td>
+                        <td className="px-6 py-3 text-ink">{l.company}</td>
                         <td className="px-6 py-3 text-body">{l.category}</td>
                         <td className="px-6 py-3 text-body">
                           <span className="inline-flex items-center gap-1">

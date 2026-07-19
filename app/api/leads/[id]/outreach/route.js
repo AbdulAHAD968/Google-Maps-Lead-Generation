@@ -27,7 +27,7 @@ export async function POST(request, { params }) {
     }
 
     const context = [
-      `Business name: ${lead.businessName}`,
+      `Business name: ${lead.company}`,
       lead.category && `Category: ${lead.category}`,
       lead.city && `City: ${lead.city}`,
       lead.rating ? `Google rating: ${lead.rating} (${lead.reviewsCount} reviews)` : "No rating yet",

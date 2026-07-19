@@ -109,7 +109,7 @@ export function mapPlaceToLead(place, campaignQuery) {
 
   return {
     placeId: place.id,
-    businessName: place.displayName?.text || "",
+    company: place.displayName?.text || "",
     category: place.primaryTypeDisplayName?.text || place.types?.[0] || "",
     address: place.formattedAddress || "",
     city:

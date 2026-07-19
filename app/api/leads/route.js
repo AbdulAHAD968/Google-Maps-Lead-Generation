@@ -12,7 +12,7 @@ export async function GET(request) {
     const minRating = searchParams.get("minRating");
     const hasWebsite = searchParams.get("hasWebsite");
     const hasPhone = searchParams.get("hasPhone");
-    const status = searchParams.get("status");
+    const stage = searchParams.get("stage");
     const favorite = searchParams.get("favorite");
     const limit = Math.min(Number(searchParams.get("limit")) || 500, 1000);
 
@@ -20,14 +20,14 @@ export async function GET(request) {
     if (campaignQuery) filter.campaignQuery = campaignQuery;
     if (search) {
       filter.$or = [
-        { businessName: { $regex: search, $options: "i" } },
+        { company: { $regex: search, $options: "i" } },
         { category: { $regex: search, $options: "i" } },
       ];
     }
     if (minRating) filter.rating = { $gte: Number(minRating) };
     if (hasWebsite === "true") filter.website = { $nin: ["", null] };
     if (hasPhone === "true") filter.phone = { $nin: ["", null] };
-    if (status) filter.status = status;
+    if (stage) filter.stage = stage;
     if (favorite === "true") filter.favorite = true;
 
     const leads = await Lead.find(filter).sort({ createdAt: -1 }).limit(limit);

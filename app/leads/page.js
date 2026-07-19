@@ -19,14 +19,14 @@ import {
 import Drawer from "@/app/components/Drawer";
 import SpikeMark from "@/app/components/SpikeMark";
 
-const STATUS_OPTIONS = [
-  "new",
-  "contacted",
-  "interested",
-  "meeting_booked",
-  "proposal_sent",
-  "won",
-  "lost",
+const STAGE_OPTIONS = [
+  "New",
+  "Contacted",
+  "Qualified",
+  "Proposal Sent",
+  "Negotiating",
+  "Won",
+  "Lost",
 ];
 
 const OUTREACH_TYPES = [
@@ -44,7 +44,7 @@ export default function LeadsManagerPage() {
   const [search, setSearch] = useState("");
   const [minRating, setMinRating] = useState(0);
   const [hasWebsite, setHasWebsite] = useState(false);
-  const [status, setStatus] = useState("");
+  const [stage, setStage] = useState("");
   const [favoriteOnly, setFavoriteOnly] = useState(false);
 
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -70,14 +70,14 @@ export default function LeadsManagerPage() {
     if (search) params.set("search", search);
     if (minRating) params.set("minRating", String(minRating));
     if (hasWebsite) params.set("hasWebsite", "true");
-    if (status) params.set("status", status);
+    if (stage) params.set("stage", stage);
     if (favoriteOnly) params.set("favorite", "true");
 
     const res = await fetch(`/api/leads?${params.toString()}`);
     const data = await res.json();
     setLeads(data.leads || []);
     setLoading(false);
-  }, [activeCampaign, search, minRating, hasWebsite, status, favoriteOnly]);
+  }, [activeCampaign, search, minRating, hasWebsite, stage, favoriteOnly]);
 
   useEffect(() => {
     fetchCampaigns();
@@ -139,14 +139,14 @@ export default function LeadsManagerPage() {
   const exportCsv = () => {
     if (!leads.length) return;
     const columns = [
-      "businessName",
+      "company",
       "category",
       "address",
       "phone",
       "website",
       "rating",
       "reviewsCount",
-      "status",
+      "stage",
       "campaignQuery",
     ];
     const rows = [
@@ -170,7 +170,7 @@ export default function LeadsManagerPage() {
     search,
     minRating,
     hasWebsite,
-    status,
+    stage,
     favoriteOnly,
   ].filter(Boolean).length;
 
@@ -263,7 +263,7 @@ export default function LeadsManagerPage() {
                 <th className="px-4 py-3 font-medium">Business</th>
                 <th className="px-4 py-3 font-medium">Rating</th>
                 <th className="px-4 py-3 font-medium">Contact</th>
-                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Stage</th>
               </tr>
             </thead>
             <tbody>
@@ -304,7 +304,7 @@ export default function LeadsManagerPage() {
                       </button>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-ink">{l.businessName}</p>
+                      <p className="text-ink">{l.company}</p>
                       <p className="text-[12px] text-muted-soft">
                         {l.category}
                       </p>
@@ -327,8 +327,8 @@ export default function LeadsManagerPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-pill bg-surface-card px-2 py-1 font-body text-[12px] capitalize text-body">
-                        {l.status.replace("_", " ")}
+                      <span className="rounded-pill bg-surface-card px-2 py-1 font-body text-[12px] text-body">
+                        {l.stage}
                       </span>
                     </td>
                   </tr>
@@ -378,17 +378,17 @@ export default function LeadsManagerPage() {
 
           <div>
             <label className="mb-2 block font-body text-sm font-medium text-ink">
-              Status
+              Stage
             </label>
             <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              value={stage}
+              onChange={(e) => setStage(e.target.value)}
               className="h-10 w-full rounded-md border border-hairline bg-canvas px-3 font-body text-sm text-ink focus:border-primary focus:outline-none"
             >
-              <option value="">All statuses</option>
-              {STATUS_OPTIONS.map((s) => (
+              <option value="">All stages</option>
+              {STAGE_OPTIONS.map((s) => (
                 <option key={s} value={s}>
-                  {s.replace("_", " ")}
+                  {s}
                 </option>
               ))}
             </select>
@@ -426,7 +426,7 @@ export default function LeadsManagerPage() {
       <Drawer
         open={!!activeLead}
         onClose={() => setActiveLead(null)}
-        title={activeLead?.businessName || "Lead"}
+        title={activeLead?.company || "Lead"}
       >
         {activeLead && (
           <div className="flex flex-col gap-6">
@@ -460,18 +460,18 @@ export default function LeadsManagerPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-2 block font-body text-sm font-medium text-ink">
-                  Status
+                  Stage
                 </label>
                 <select
-                  value={activeLead.status}
+                  value={activeLead.stage}
                   onChange={(e) =>
-                    updateLead(activeLead._id, { status: e.target.value })
+                    updateLead(activeLead._id, { stage: e.target.value })
                   }
                   className="h-10 w-full rounded-md border border-hairline bg-canvas px-3 font-body text-sm text-ink focus:border-primary focus:outline-none"
                 >
-                  {STATUS_OPTIONS.map((s) => (
+                  {STAGE_OPTIONS.map((s) => (
                     <option key={s} value={s}>
-                      {s.replace("_", " ")}
+                      {s}
                     </option>
                   ))}
                 </select>

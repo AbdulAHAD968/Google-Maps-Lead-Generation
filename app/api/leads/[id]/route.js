@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "@/app/lib/mongodb";
 import Lead from "@/app/models/Lead";
 
-const EDITABLE_FIELDS = ["status", "favorite", "notes"];
+const EDITABLE_FIELDS = ["stage", "favorite", "notes"];
 
 export async function PATCH(request, { params }) {
   try {
