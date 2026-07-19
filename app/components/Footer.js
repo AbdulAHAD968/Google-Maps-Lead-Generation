@@ -4,7 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SpikeMark from "./SpikeMark";
 
-const HIDDEN_ON = ["/tools/google-maps-leads", "/leads"];
+const HIDDEN_ON = [
+  "/tools/google-maps-leads",
+  "/leads",
+  "/login",
+  "/forgot-password",
+  "/reset-password",
+  "/change-password",
+];
 
 const columns = [
   {
