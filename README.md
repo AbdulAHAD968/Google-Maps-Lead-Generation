@@ -12,20 +12,20 @@ hiring (a buying-intent signal).
 - **Next.js 16** (App Router, Turbopack) + React 19
 - **Tailwind CSS v4** with a custom design system (see `DESIGN.md`)
 - **MongoDB** via Mongoose for lead storage
-- **Google Maps Platform** — Places API (New), Geocoding API, Maps JavaScript API
+- **Google Maps Platform** - Places API (New), Geocoding API, Maps JavaScript API
 - **Playwright** (Chromium) for deep-extraction scraping (Google Maps reviews/activity signals, Indeed job listings)
 - **OpenAI API** for AI-generated outreach messages
 - **react-icons** and **lucide-react** for icons
 
 ## Features
 
-### `/` — Landing page
+### `/` - Landing page
 Marketing page for the product, built against the design tokens in `DESIGN.md`.
 
-### `/tools` — Tools directory
+### `/tools` - Tools directory
 Lists every tool available in the platform.
 
-### `/tools/google-maps-leads` — Google Maps Lead Generation
+### `/tools/google-maps-leads` - Google Maps Lead Generation
 Full-screen map interface. Click a point on the map (or use the search box to
 jump to a city/address), a drawer slides in from the right to configure:
 
@@ -43,14 +43,14 @@ text, and detailed photo count. All results are upserted into MongoDB, keyed
 by Google's `placeId` so re-running a search updates existing leads instead
 of duplicating them.
 
-### `/tools/indeed-leads` — Indeed Hiring Leads
+### `/tools/indeed-leads` - Indeed Hiring Leads
 Searches Indeed job postings by role and location via a Playwright-driven
 scraper (Indeed has no public search API and blocks plain HTTP requests).
-Companies actively hiring are a buying-intent signal — useful for outreach
+Companies actively hiring are a buying-intent signal - useful for outreach
 targeting growing businesses. Results are deduplicated by job URL and stored
 in MongoDB.
 
-### `/leads` — Lead Manager
+### `/leads` - Lead Manager
 Full-screen dashboard of every lead ever collected, across every campaign
 (a campaign = one search run, grouped by keyword + location). Filter by
 search term, rating, status, has-website, and favorites. Click any lead to
@@ -70,7 +70,7 @@ Export any filtered view to CSV from the top bar.
 ## Known limitations
 
 - **Places API results are capped at 60** per search (Google's Text Search
-  pagination limit — 3 pages of 20). Run narrower searches (smaller radius,
+  pagination limit - 3 pages of 20). Run narrower searches (smaller radius,
   more specific keyword) to stay under the cap for a given area.
 - **Playwright scraping (deep scan, Indeed search) is inherently fragile.**
   Both Google Maps and Indeed can change their page markup at any time,
@@ -80,7 +80,7 @@ Export any filtered view to CSV from the top bar.
 - **Neither scraper is officially supported by Google or Indeed.** Automated
   browsing of their pages can be rate-limited or blocked (Indeed in
   particular runs bot detection that returns HTTP 403 under load). This is
-  best used for occasional, targeted lookups — not high-volume automation —
+  best used for occasional, targeted lookups - not high-volume automation -
   unless you add a proxy layer.
 - **The Places API has real per-request cost** beyond Google's monthly free
   credit. See "Google Cloud setup" below.
@@ -134,8 +134,8 @@ npm start
 
 ## Google Cloud setup
 
-1. Create a dedicated GCP project for this app (don't reuse an unrelated project — keeps billing and API scope clean).
-2. Link a Cloud Billing account to the project (`console.cloud.google.com/billing`). Google grants **$200/month of Maps Platform usage credit automatically** — most development and light production usage stays within this.
+1. Create a dedicated GCP project for this app (don't reuse an unrelated project - keeps billing and API scope clean).
+2. Link a Cloud Billing account to the project (`console.cloud.google.com/billing`). Google grants **$200/month of Maps Platform usage credit automatically** - most development and light production usage stays within this.
 3. Enable exactly these APIs under **APIs & Services → Library**:
    - Places API (New)
    - Geocoding API
@@ -143,13 +143,13 @@ npm start
 4. Create an API key under **APIs & Services → Credentials**.
 5. Restrict the key:
    - **API restrictions**: limit to just the 3 APIs above.
-   - **Application restrictions**: use **IP addresses** for the server-side key (`GOOGLE_MAPS_API_KEY`), and **Websites** (your domain) for the browser-exposed key (`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) if you split them into two separate keys — recommended for production.
+   - **Application restrictions**: use **IP addresses** for the server-side key (`GOOGLE_MAPS_API_KEY`), and **Websites** (your domain) for the browser-exposed key (`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) if you split them into two separate keys - recommended for production.
 
 ### Cost notes
 
-- **Places API (New) Text Search** is the main cost driver — roughly $25-35 per 1,000 places at current pricing, depending on which fields are requested (this app only requests the fields it actually stores, to keep cost down).
+- **Places API (New) Text Search** is the main cost driver - roughly $25-35 per 1,000 places at current pricing, depending on which fields are requested (this app only requests the fields it actually stores, to keep cost down).
 - **Geocoding API** and **Maps JavaScript API** are comparatively cheap per call.
-- **The Indeed and deep-scan scrapers have no API cost** — they run a local/server-side Chromium browser instead — but are correspondingly slower and less reliable than a real API.
+- **The Indeed and deep-scan scrapers have no API cost** - they run a local/server-side Chromium browser instead - but are correspondingly slower and less reliable than a real API.
 
 ## Project structure
 
