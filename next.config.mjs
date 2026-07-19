@@ -7,6 +7,7 @@ const nextConfig = {
   // archives inside @sparticuz/chromium unless explicitly included here.
   outputFileTracingIncludes: {
     "/api/leads/[id]/deep-extract": ["./node_modules/@sparticuz/chromium/bin/**"],
+    "/api/indeed/search": ["./node_modules/@sparticuz/chromium/bin/**"],
   },
 };
 

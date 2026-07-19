@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { launchBrowser } from "./browserLauncher";
 
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
@@ -26,7 +26,7 @@ export async function searchIndeedJobs({ keyword, location, maxResults = 50 }) {
   const resultsPerPage = 15;
   const pages = Math.ceil(Math.min(maxResults, 100) / resultsPerPage);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await launchBrowser();
 
   try {
     const context = await browser.newContext({
