@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "@/app/lib/mongodb";
 import Lead from "@/app/models/Lead";
 import { deepExtractGoogleMaps } from "@/app/lib/mapsScraper";
+import { extractEmailFromWebsite } from "@/app/lib/emailScraper";
 
 export const maxDuration = 60;
 
@@ -28,6 +29,16 @@ export async function POST(request, { params }) {
     lead.ownerRespondsToReviews = extracted.ownerRespondsToReviews;
     lead.recentReviews = extracted.recentReviews;
     lead.deepExtractedAt = new Date();
+
+    if (!lead.email && lead.website) {
+      try {
+        const scrapedEmail = await extractEmailFromWebsite(lead.website);
+        if (scrapedEmail) lead.email = scrapedEmail;
+      } catch (emailErr) {
+        console.error("Email scrape failed:", emailErr);
+      }
+    }
+
     await lead.save();
 
     return NextResponse.json({ lead, partial: extracted.partial });

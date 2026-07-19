@@ -440,6 +440,14 @@ export default function LeadsManagerPage() {
                     <HiOutlinePhone size={14} /> {activeLead.phone}
                   </span>
                 )}
+                {activeLead.email && (
+                  <a
+                    href={`mailto:${activeLead.email}`}
+                    className="flex items-center gap-1.5 text-primary"
+                  >
+                    <HiOutlineMail size={14} /> {activeLead.email}
+                  </a>
+                )}
                 {activeLead.website && (
                   <a
                     href={activeLead.website}

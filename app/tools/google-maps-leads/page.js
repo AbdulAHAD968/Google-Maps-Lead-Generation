@@ -369,6 +369,17 @@ export default function GoogleMapsLeadsPage() {
                                       profile
                                     </p>
                                   )}
+                                  {l.email && (
+                                    <p className="mt-2 font-body text-sm text-body">
+                                      Email:{" "}
+                                      <a
+                                        href={`mailto:${l.email}`}
+                                        className="text-primary"
+                                      >
+                                        {l.email}
+                                      </a>
+                                    </p>
+                                  )}
                                 </div>
                                 <div>
                                   <p className="mb-2 font-body text-[13px] font-medium uppercase tracking-[1px] text-muted">
