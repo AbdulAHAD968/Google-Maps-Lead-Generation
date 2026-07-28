@@ -4,7 +4,7 @@ const ActivitySchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["stage_change", "note", "call", "email", "assignment"],
+      enum: ["stage_change", "note", "call", "email", "assignment", "research_note", "research_completed", "recording_uploaded"],
       required: true,
     },
     message: { type: String, required: true },
@@ -24,6 +24,7 @@ const CallSchema = new mongoose.Schema(
       required: true,
     },
     notes: { type: String, default: "" },
+    recordingUrl: { type: String, default: "" },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   },
   { timestamps: true }
@@ -35,6 +36,16 @@ const ReviewSchema = new mongoose.Schema(
     rating: Number,
     text: String,
     relativeDate: String,
+  },
+  { _id: false }
+);
+
+const ResearchDocumentSchema = new mongoose.Schema(
+  {
+    url: { type: String, required: true },
+    filename: { type: String, default: "" },
+    uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    uploadedAt: { type: Date, default: Date.now },
   },
   { _id: false }
 );
@@ -98,6 +109,7 @@ const LeadSchema = new mongoose.Schema(
     stage: {
       type: String,
       enum: [
+        "Researching",
         "New",
         "Contacted",
         "Qualified",
@@ -106,10 +118,17 @@ const LeadSchema = new mongoose.Schema(
         "Won",
         "Lost",
       ],
-      default: "New",
+      default: "Researching",
     },
     favorite: { type: Boolean, default: false },
     notes: { type: String, default: "" },
+
+    // Research phase - a lead sits here until a researcher attaches findings
+    // and marks it done, at which point it becomes visible to cold callers.
+    researchNotes: { type: String, default: "" },
+    researchDocuments: { type: [ResearchDocumentSchema], default: [] },
+    researchCompletedAt: { type: Date, default: null },
+    researchCompletedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
 
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
 
@@ -117,6 +136,11 @@ const LeadSchema = new mongoose.Schema(
     calls: { type: [CallSchema], default: [] },
     nextFollowUpDate: { type: Date, default: null },
     lastActivityAt: { type: Date, default: Date.now },
+
+    // Full original row, kept verbatim for leads imported from an external
+    // spreadsheet - guarantees no column is silently lost even if it has
+    // no dedicated field above.
+    rawImport: { type: mongoose.Schema.Types.Mixed, default: null },
   },
   { timestamps: true }
 );

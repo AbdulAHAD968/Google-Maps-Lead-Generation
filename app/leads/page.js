@@ -20,6 +20,7 @@ import Drawer from "@/app/components/Drawer";
 import SpikeMark from "@/app/components/SpikeMark";
 
 const STAGE_OPTIONS = [
+  "Researching",
   "New",
   "Contacted",
   "Qualified",
