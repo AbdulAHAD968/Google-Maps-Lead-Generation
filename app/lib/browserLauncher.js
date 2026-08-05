@@ -1,16 +1,17 @@
 // On Vercel, the full `playwright` package's bundled Chromium is too large and its native
-// bindings don't survive Turbopack's file tracing. In production we use `playwright-core`
+// bindings don't survive Turbopack's file tracing. There we use `playwright-core`
 // (no bundled browser) paired with `@sparticuz/chromium`, a Lambda-compatible Chromium build.
-// Locally, the full `playwright` package (devDependency) drives its own downloaded browser.
+// Everywhere else (local dev, Docker) the full `playwright` package drives its own
+// downloaded/installed browser directly.
 // Extra args that make headless Chromium harder to fingerprint as automation.
 // `--disable-blink-features=AutomationControlled` removes the most common signal
 // (navigator.webdriver + related Blink flags) that anti-bot systems check for.
 const STEALTH_ARGS = ["--disable-blink-features=AutomationControlled"];
 
 export async function launchBrowser() {
-  const isProduction = process.env.VERCEL_ENV !== undefined;
+  const isVercel = process.env.VERCEL_ENV !== undefined;
 
-  if (isProduction) {
+  if (isVercel) {
     const [{ chromium }, chromiumBinary] = await Promise.all([
       import("playwright-core"),
       import("@sparticuz/chromium"),

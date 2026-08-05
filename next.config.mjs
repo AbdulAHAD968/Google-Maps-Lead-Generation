@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   // Keep these as external requires so Turbopack doesn't inline their native bindings
-  serverExternalPackages: ["playwright-core", "@sparticuz/chromium"],
+  serverExternalPackages: ["playwright-core", "@sparticuz/chromium", "playwright"],
 
   // Vercel's file tracer only follows JS imports; it skips non-JS assets that packages read
   // from disk at runtime - the Chromium binary/shared-libs archives inside @sparticuz/chromium,
